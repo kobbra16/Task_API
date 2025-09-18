@@ -2,7 +2,7 @@
 Task_api_https://gorest.co.in/
 Write positive and negative test cases for the API endpoints
 POST - endpoint, that creates a new and unique user in the database:
-1.URL: https://gorest.co.in/public-api/users
+1.URL: https://gorest.co.in/public/v2/users
 2.https://gorest.co.in/public/v2/users
 3. Headers:
 a. "Accept" = "application/json"
@@ -16,7 +16,7 @@ b. “Content-Type” = "application/json"
 }
 5. Endpoint requires Authentication, by Bearer Token (‘TEST_TOKEN’) that can be generated on https://gorest.co.in/access-token after а successful login to the site.
   ii. GET - endpoint, that returns the user by the id:
-            1. URL: https://gorest.co.in/public-ap...{USER_ID}
+            1. URL: https://gorest.co.in/public...{USER_ID}
             2. Method: GET
             3. In the URL the USER_ID must be sent after ...users/
 
@@ -73,7 +73,42 @@ header or wrong value                                                           
                                   "hobby": "chess")                                    400 with error
 10.Empty JSON body                {} or empty request body                             HTTP 422 or HTTP 400; validation error
 11.Malformed JSON                 Broken JSON syntax                                   HTTP 400 Bad Request
-                                                              
+
+2. GET Endpoint — Retrieve user by ID
+
+URL: https://gorest.co.in/public/v2/users/{USER_ID}
+Method: GET
+Headers:
+
+Accept: application/json
+Authorization: Bearer TEST_TOKEN
+
+Positive Test Cases for GET                                                              
+
+Test Case Description                                Steps / Input                              Expected Result
+
+1.Retrieve existing user by                  Valid USER_ID for an existing user;           HTTP 200 OK; response JSON contains 
+ valid USER_ID                               proper Authorization                          user details
+2.Verify response content-type              Check if response header Content-Type          Content-Type: application/json
+header
+3.Retrieve user with valid token             Retrieve user with valid token                Successful response
+                                                                                           Status code 200
+Negative Test Cases for GET
+
+Test Case Description                                 Steps / Input                             Expected Result
+
+1.Retrieve user with non-existing            Retrieve user with non-existing USER_ID         Use a USER_ID that does not exist in DB
+USER_ID
+2.Missing Authorization header               Omit Bearer token in Authorization              HTTP 401 Unauthorized
+3.Invalid or expired Authentication          Provide invalid/expired Bearer token            HTTP 401 Unauthorized or 403 Forbidden
+ token
+4.USER_ID in invalid format                  Use a non-numeric or malformed USER_ID          HTTP 400 Bad Request or 404 Not Found
+                                             (e.g., "abc123")
+5.Invalid Accept header                      Send Accept header with unsupported             HTTP 406 Not Acceptable
+                                              media type (e.g., text/html)
+
+
+
 
 
 
